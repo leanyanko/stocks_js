@@ -1,7 +1,7 @@
 import React, { Component }  from 'react';
-import './Item.css';
+import './Buy.css';
 
-class Item extends Component {
+class Buy extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,11 +17,11 @@ class Item extends Component {
 
     render() {
         return (
-            <div className="item">
+            <div className="buy">
                 <span>{this.state.name}</span>  <span>{this.state.price}</span> <span>3</span>
             </div>
         );
     }
 }
 
-export default Item;
+export default Buy;

@@ -4,6 +4,8 @@ import Stocks from "./Stocks";
 import Header from "./Header";
 import {fire} from "../services/firebase";
 import Spinner from "./Spinner";
+import './Dashboard.css';
+import Buy from "./Buy";
 
 
 class Dashboard extends Component {
@@ -21,12 +23,14 @@ class Dashboard extends Component {
                     authenticated: true,
                     currentUser: user,
                     loading: false,
+                    user: user
                 })
             } else {
                 this.setState({
                     authenticated: false,
                     currentUser: null,
                     loading: false,
+                    user: null
                 })
             }
         })
@@ -46,9 +50,17 @@ class Dashboard extends Component {
             )
         }
         return(
-            <div>
+            <div className="dashboard">
                 <Header authenticated={this.state.authenticated}/>
-                <Stocks />
+
+                <div className="hello">
+                  {this.state.user ? "Portfolio for " + this.state.user?.email : ""}
+                </div>
+                <div className="tableau">
+                    <Stocks />
+                    <Buy />
+                </div>
+
             </div>
         );
     }

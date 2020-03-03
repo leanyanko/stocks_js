@@ -1,0 +1,16 @@
+.hello {
+    font-size: 1.9em;
+
+}
+
+.dashboard {
+    width: 90%;
+    margin-right: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+.tableau {
+    display: flex;
+    flex-direction: row;
+}
