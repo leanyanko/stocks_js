@@ -18,7 +18,7 @@ class Item extends Component {
     render() {
         return (
             <div>
-                {this.state.name}: {this.state.price}
+                {this.state.name}:     {this.state.price}
             </div>
         );
     }
