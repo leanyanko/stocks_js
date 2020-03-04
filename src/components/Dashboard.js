@@ -33,7 +33,9 @@ class Dashboard extends Component {
                     user: null
                 })
             }
-        })
+            console.log("user ", this.state.user);
+        });
+
     }
 
     componentWillUnmount() {
@@ -58,7 +60,7 @@ class Dashboard extends Component {
                 </div>
                 <div className="tableau">
                     <Stocks />
-                    <Buy />
+                    <Buy user={this.state.user}/>
                 </div>
 
             </div>

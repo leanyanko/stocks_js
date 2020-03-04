@@ -1,3 +1,12 @@
 .buy {
     width: 30%;
+    margin: 20px;
+}
+
+form input {
+    border: 1px solid deepskyblue;
+    border-radius: 2px;
+    /*padding: 2px;*/
+    margin: 4px;
+    box-shadow: 1px 1px 0 0;
 }

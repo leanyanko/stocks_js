@@ -13,6 +13,6 @@ var firebaseConfig = {
 // Initialize Firebase
 const fire = firebase.initializeApp(firebaseConfig);
 // firebase.analytics();
+const db = fire.database();
 
-
-export { fire };
+export { fire, db };
