@@ -7,9 +7,14 @@ const part = `&interval=1min&apikey=`
 const stockService = {};
 
 const url = `https://cloud.iexapis.com/stable/stock/market/batch?symbols=aapl,msft,stwd,nflx,att&types=quote&token=pk_d620f6f7786d4c0b85979e5a527ef770`
-
 stockService.get = (symbol) => {
+
     return axios.get(url);
 };
+
+stockService.getSingle = (ticker) => {
+    const url_single = `https://cloud.iexapis.com/stable/stock/market/batch?symbols=${ticker}&types=quote&token=pk_d620f6f7786d4c0b85979e5a527ef770`
+    return axios.get(url_single);
+}
 
 export default stockService;
