@@ -2,6 +2,7 @@ import React, { Component }  from 'react';
 import './Buy.css';
 import { fire, db } from '../services/firebase';
 import stockService from "../services/stocksService";
+import userService from "../services/userService";
 
 class Buy extends Component {
     constructor(props) {
@@ -14,7 +15,8 @@ class Buy extends Component {
         };
         this.buy = this.buy.bind(this);
         this.getPrice = this.getPrice.bind(this);
-        // const
+        this.updateUser = this.updateUser.bind(this);
+
     }
 
 
@@ -23,10 +25,43 @@ class Buy extends Component {
         // console.log(this.state);
         const refUser = db.ref().child('users');
         refUser.on('value', snap => {
-            const user = snap.val().filter(user => user.email === this.props.user.email)[0];
-            this.setState({user: user});
-            console.log("userrr", user);
+            const users = snap.val();
+            var user = {};
+            var index = 0;
+            for (index; index < users.length; index++) {
+                if (users[index].email === this.props.user.email) {
+                    user = users[index];
+                    break;
+                }
+            }
+            // const user = snap.val().filter(user => user.email === this.props.user.email)[0];
+            this.setState({user: user, id: index});
         });
+    }
+
+
+    updateUser(user, ticker, qty, total) {
+        user.cash -= total;
+        const today = new Date();
+        const transaction = "buy";
+        if (!user.stocks) user.stocks = [];
+        user.stocks.push({ticker, qty, total});
+        if (!user.transactions) user.transactions= [];
+        user.transactions.push({ticker, qty, total, today, transaction});
+
+        this.setState({
+            user:user
+        });
+        console.log("new user ", user);
+        // userService.updateUser(user.id, user)
+        //     .then((ok) => console.log("updated"));
+        db.ref('users/' + this.state.id).set({
+            cash: user.cash,
+            email: user.email,
+            stocks: user.stocks,
+            transactions: user.transactions
+        });
+
     }
 
     buy(event) {
@@ -34,22 +69,10 @@ class Buy extends Component {
         const that = this;
         const ticker = this.ticker.value;
         const qty = this.qty.value;
-        // stockService.getSingle(ticker)
-        //     .then((promise) => that.setState({cost: promise.data[ticker.toUpperCase()]["quote"]["latestPrice"]}));
         const total = this.state.total;
         const user = {...this.state.user};
         if (user.cash >= total) {
-            user.cash -= total;
-            const today = new Date();
-            const transaction = "buy";
-            if (!user.stocks) user.stocks = [];
-            user.stocks.push({ticker, qty, total});
-            if (!user.transactions) user.transactions= [];
-            user.transactions.push({ticker, qty, total, today, transaction});
-
-            this.setState({
-                user:user
-            })
+            this.updateUser(user, ticker, qty, total);
         }
     }
 
@@ -59,7 +82,7 @@ class Buy extends Component {
     }
 
     render() {
-        console.log(this.state);
+        console.log("state", this.state);
         return (
             <div className="buy">
                 {this.state.user.cash}

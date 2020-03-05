@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+       "1" : {
+        "email": "sf@rssrh.com",
+        "cash": 5000,
+        "stocks": []
+      }
+    },
+    {
+      "2" : {
+        "email": "sf@rsa.com",
+        "cash": 5000,
+        "stocks": []
+      }
+    }
+  ]
+}
