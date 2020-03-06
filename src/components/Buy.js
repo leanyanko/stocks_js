@@ -22,7 +22,6 @@ class Buy extends Component {
 
 
     componentDidMount() {
-        // console.log(this.state);
         const refUser = db.ref().child('users');
         refUser.on('value', snap => {
             const users = snap.val();
@@ -34,7 +33,6 @@ class Buy extends Component {
                     break;
                 }
             }
-            // const user = snap.val().filter(user => user.email === this.props.user.email)[0];
             this.setState({user: user, id: index});
         });
     }
@@ -42,19 +40,26 @@ class Buy extends Component {
 
     updateUser(user, ticker, qty, total) {
         user.cash -= total;
-        const today = new Date();
+        const today = new Date().toISOString();
         const transaction = "buy";
         if (!user.stocks) user.stocks = [];
-        user.stocks.push({ticker, qty, total});
+        const tmp = user.stocks.filter(stock => stock.ticker === ticker)[0];
+
+        if (tmp) {
+            // tmp.qty = parseInt(tmp.qty) + qty;
+            tmp.qty += qty;
+            tmp.total += total;
+        }
+         else
+             user.stocks.push({ticker, qty, total});
+
         if (!user.transactions) user.transactions= [];
         user.transactions.push({ticker, qty, total, today, transaction});
 
         this.setState({
             user:user
         });
-        console.log("new user ", user);
-        // userService.updateUser(user.id, user)
-        //     .then((ok) => console.log("updated"));
+
         db.ref('users/' + this.state.id).set({
             cash: user.cash,
             email: user.email,
@@ -66,9 +71,9 @@ class Buy extends Component {
 
     buy(event) {
         event.preventDefault();
-        const that = this;
+        // const that = this;
         const ticker = this.ticker.value;
-        const qty = this.qty.value;
+        const qty = parseInt(this.qty.value);
         const total = this.state.total;
         const user = {...this.state.user};
         if (user.cash >= total) {
