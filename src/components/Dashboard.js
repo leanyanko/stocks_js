@@ -72,7 +72,7 @@ class Dashboard extends Component {
                   {this.state.user ? "Portfolio for " + this.state.user?.email : ""}
                 </div>
                 <div className="tableau">
-                    <Stocks stocks={(this.state.user) ? this.state.user.stocks : {}}/>
+                    <Stocks stocks={(this.state.user) ? this.state.user.stocks : []}/>
                     <Buy user={this.state.user} updates={this.getUserUpdates}/>
                 </div>
 

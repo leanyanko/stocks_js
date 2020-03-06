@@ -6,19 +6,19 @@ class Item extends Component {
         super(props);
         this.state = {
             name: this.props.name,
-            price: this.props.price
+            price: this.props.price,
         };
     }
 
 
     componentDidMount() {
-        console.log(this.state);
+        // console.log(this.state);
     }
 
     render() {
         return (
             <div className="item">
-                <span>{this.state.name}</span>  <span>{this.state.price}</span> <span>3</span>
+                <span>{this.state.name}</span>  <span>{this.state.price}</span> <span>{this.props.qty}</span>
             </div>
         );
     }
