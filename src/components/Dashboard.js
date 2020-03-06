@@ -13,7 +13,8 @@ class Dashboard extends Component {
         super();
         this.state = {
             authenticated: false
-        }
+        };
+        this.getUserUpdates = this.getUserUpdates.bind(this);
     }
 
     componentDidMount() {
@@ -33,13 +34,25 @@ class Dashboard extends Component {
                     user: null
                 })
             }
-            console.log("user ", this.state.user);
+            // console.log("user ", this.state.user);
         });
 
     }
 
     componentWillUnmount() {
         this.removeAuthListener();
+    }
+
+    getUserUpdates(updated) {
+        const user = {...this.state.user};
+        // console.log("updating", updated);
+        if (updated) {
+            user.cash = updated.cash;
+            user.stocks = updated.stocks;
+            user.transactions = updated.transactions;
+            // console.log("updated", user.stocks);
+            this.setState({user: user})
+        }
     }
 
     render() {
@@ -59,8 +72,8 @@ class Dashboard extends Component {
                   {this.state.user ? "Portfolio for " + this.state.user?.email : ""}
                 </div>
                 <div className="tableau">
-                    <Stocks />
-                    <Buy user={this.state.user}/>
+                    <Stocks stocks={(this.state.user) ? this.state.user.stocks : {}}/>
+                    <Buy user={this.state.user} updates={this.getUserUpdates}/>
                 </div>
 
             </div>

@@ -27,8 +27,11 @@ class Stocks extends Component {
             })
     }
 
+
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         console.log(this.state);
+        console.log("in stocks", this.props.stocks);
     }
 
 
@@ -37,7 +40,8 @@ class Stocks extends Component {
 
         return (
             <div className="stocksboard">
-                {this.state.stocks.map((s, i) => <Item key={i} name={s.name} price={s.price}/>)}
+                {/*{this.state.stocks.map((s, i) => <Item key={i} name={s.name} price={s.price}/>)}*/}
+                {/*{this.props.stocks.map((s, i) => <Item key={i} name={s.ticker} price={s.total}/>)}*/}
 
             </div>
         );

@@ -37,6 +37,9 @@ class Buy extends Component {
         });
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+
+    }
 
     updateUser(user, ticker, qty, total) {
         user.cash -= total;
@@ -66,7 +69,7 @@ class Buy extends Component {
             stocks: user.stocks,
             transactions: user.transactions
         });
-
+        this.props.updates(user);
     }
 
     buy(event) {
