@@ -90,7 +90,7 @@ class Buy extends Component {
     }
 
     render() {
-        console.log("state", this.state);
+        // console.log("state", this.state);
         return (
             <div className="buy">
                 {this.state.user.cash}
@@ -112,7 +112,7 @@ class Buy extends Component {
                            ref={(qty => {this.qty = qty})}
                            onChange={(qty) => {
                                if (this.state.price && this.state.price > 0 && this.qty.value ) {
-                                   this.setState({total: this.qty.value * this.state.price})
+                                   this.setState({total: (this.qty.value * this.state.price).toFixed(2)})
                                }
                            }}
                            placeholder="0"/>
