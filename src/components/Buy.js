@@ -16,7 +16,7 @@ class Buy extends Component {
         this.buy = this.buy.bind(this);
         this.getPrice = this.getPrice.bind(this);
         this.updateUser = this.updateUser.bind(this);
-
+        console.log("constructor buy props", this.props.user);
     }
 
 
@@ -35,11 +35,10 @@ class Buy extends Component {
             }
             this.setState({user: user, id: index});
         });
+        // this.setState({user: this.props.user});
+        console.log("buy props", this.props.user);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-
-    }
 
     updateUser(user, ticker, qty, total) {
         user.cash -= total;
@@ -62,7 +61,7 @@ class Buy extends Component {
         this.setState({
             user:user
         });
-
+        if (!user.id) user.id = this.state.id;
         db.ref('users/' + this.state.id).set({
             cash: user.cash,
             email: user.email,
@@ -86,7 +85,7 @@ class Buy extends Component {
 
     getPrice(ticker) {
         stockService.getSingle(ticker)
-            .then((promise) => this.setState({price: promise.data[ticker.toUpperCase()]["quote"]["latestPrice"]}));
+            .then((promise) => this.setState({price: promise.data[ticker.toUpperCase()]["quote"]["latestPrice"].toFixed(2)}));
     }
 
     render() {

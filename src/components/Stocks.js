@@ -2,6 +2,7 @@ import React, { Component }  from 'react';
 import stockService from "../services/stocksService";
 import Item from './Item';
 import './Stocks.css';
+import {db} from '../services/firebase'
 
 class Stocks extends Component {
     constructor() {
@@ -15,25 +16,30 @@ class Stocks extends Component {
     componentDidMount() {
         stockService.get('MSFT')
             .then(data => {
-                const stocks = [
+                const tickers = [
                     {name: "aapl", price: data.data["AAPL"]["quote"]["latestPrice"]},
                     {name: "msft", price: data.data["MSFT"]["quote"]["latestPrice"]},
                     {name: "stwd", price: data.data["STWD"]["quote"]["latestPrice"]},
                     {name: "nflx", price: data.data["NFLX"]["quote"]["latestPrice"]}
                 ];
                 this.setState({
-                    stocks: stocks
+                    tickers: tickers
                 })
             })
-
     }
 
 
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(this.state);
-        console.log("in stocks", this.props.stocks);
-        console.log("in previous stocks", this.state.stocks);
+        const stocks = this.props.stocks ? this.props.stocks.map(stock => {
+            return this.state.tickers[stock.ticker] ?
+            stock.price = this.state.tickers[stock.ticker].price
+                : 0
+        }) : [];
+        console.log("tickers", this.state.tickers);
+        console.log(this.props.stocks);
+        console.log("new prices", stocks);
+        // console.log("in previous stocks", this.state.stocks);
 
     }
 
