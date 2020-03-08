@@ -31,11 +31,11 @@ class Stocks extends Component {
 
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const stocks = this.props.stocks ? this.props.stocks.map(stock => {
-            return this.state.tickers[stock.ticker] ?
-            stock.price = this.state.tickers[stock.ticker].price
-                : 0
-        }) : [];
+
+        const stocks = this.props.stocks ? [...this.props.stocks] : [];
+        stocks.map(stock => {
+            return stock ? stock.price = this.state.tickers[stock.ticker] : {}
+        });
         console.log("tickers", this.state.tickers);
         console.log(this.props.stocks);
         console.log("new prices", stocks);
