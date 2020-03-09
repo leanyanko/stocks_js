@@ -11,18 +11,12 @@ class Transactions extends Component {
             transactions: [],
             flag: 1
         };
-
         this.click = this.click.bind(this);
-    }
-    componentDidMount() {
-        // console.log(this.props);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(this.props);
         if (prevProps != this.props)
             this.setState({transactions: this.props.transactions});
-        console.log(this.state.transactions);
     }
 
     click() {
@@ -30,7 +24,6 @@ class Transactions extends Component {
     }
 
     render() {
-
         return (
             <div className="transactions">
                 <button onClick={() => this.click()}>

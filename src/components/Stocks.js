@@ -56,8 +56,6 @@ class Stocks extends Component {
             const total = stocks.reduce(reducer, 0).toFixed(2);
             this.setState({stocks : stocks, total : total});
         }
-        console.log("in previous stocks", this.state.stocks);
-        console.log("total", this.state.total);
     }
 
 

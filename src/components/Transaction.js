@@ -9,11 +9,6 @@ class Transaction extends Component {
         };
     }
 
-
-    componentDidMount() {
-
-    }
-
     render() {
         return (
             <div className="item">

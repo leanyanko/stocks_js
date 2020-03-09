@@ -37,8 +37,6 @@ class Buy extends Component {
             }
             this.setState({user: user, id: index});
         });
-        // this.setState({user: this.props.user});
-        console.log("buy props", this.props.user);
     }
 
 
@@ -50,7 +48,6 @@ class Buy extends Component {
         const tmp = user.stocks.filter(stock => stock.ticker === ticker)[0];
         total = parseFloat(total);
         if (tmp) {
-            // tmp.qty = parseInt(tmp.qty) + qty;
             tmp.qty += qty;
             tmp.total += total;
         } else
@@ -96,7 +93,6 @@ class Buy extends Component {
     }
 
     render() {
-        // console.log("state", this.state);
         return (
             <div className="buy">
                 In cash: {this.state.user.cash}

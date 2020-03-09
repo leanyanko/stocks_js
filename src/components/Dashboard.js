@@ -24,22 +24,18 @@ class Dashboard extends Component {
             if (user) {
                 this.setState({
                     authenticated: true,
-                    // currentUser: user,
                     loading: false,
                     user: user
-                })
+                });
                 this.getRespectiveUser(user);
             } else {
                 this.setState({
                     authenticated: false,
-                    currentUser: null,
                     loading: false,
                     user: null
                 })
             }
-            console.log("user_done ", this.state.user);
         });
-
     }
 
     getRespectiveUser(user) {
@@ -59,7 +55,6 @@ class Dashboard extends Component {
             if (dbUser.transactions) oldUser.transactions = dbUser.transactions;
             dbUser.id = index;
             this.setState({user: dbUser});
-            // console.log("done", this.state.user);
         });
     }
 
@@ -69,13 +64,10 @@ class Dashboard extends Component {
 
     getUserUpdates(updated) {
         const user = {...this.state.user};
-        // console.log("updating", updated);
         if (updated) {
             user.cash = updated.cash;
             user.stocks = updated.stocks;
             user.transactions = updated.transactions;
-            console.log("updated", user.stocks);
-            // this.setState({user: user})
         }
     }
 
@@ -88,7 +80,6 @@ class Dashboard extends Component {
                 </div>
             )
         }
-        console.log(this.state.user)
         return(
 
             <div className="dashboard">
@@ -99,10 +90,8 @@ class Dashboard extends Component {
                 </div>
                 <div className="tableau">
                     <Buy user={this.state.user} updates={this.getUserUpdates}/>
-                    {/*{this.state.user && this.state.user.id ?*/}
-                        <Stocks stocks={(this.state.user) ? this.state.user.stocks : []} id={this.state.user? this.state.user.id : ""}/>
-                        {/*: "" }*/}
-                        <Transactions transactions ={this.state.user ? this.state.user.transactions : []}/>
+                    <Stocks stocks={(this.state.user) ? this.state.user.stocks : []} id={this.state.user? this.state.user.id : ""}/>
+                    <Transactions transactions ={this.state.user ? this.state.user.transactions : []}/>
                 </div>
 
             </div>
