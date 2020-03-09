@@ -4,43 +4,60 @@ import Item from './Item';
 import './Stocks.css';
 import {db} from '../services/firebase'
 
+
+
 class Stocks extends Component {
     constructor() {
         super();
         this.state = {
             stocks: []
         };
+        this.calculateTotal = this.calculateTotal.bind(this);
 
     }
 
     componentDidMount() {
         stockService.get('MSFT')
             .then(data => {
-                const tickers = [
-                    {name: "aapl", price: data.data["AAPL"]["quote"]["latestPrice"]},
-                    {name: "msft", price: data.data["MSFT"]["quote"]["latestPrice"]},
-                    {name: "stwd", price: data.data["STWD"]["quote"]["latestPrice"]},
-                    {name: "nflx", price: data.data["NFLX"]["quote"]["latestPrice"]}
-                ];
+                const tickers = {
+                    "aapl" :  data.data["AAPL"]["quote"]["latestPrice"],
+                    "msft": data.data["MSFT"]["quote"]["latestPrice"],
+                    "stwd": data.data["STWD"]["quote"]["latestPrice"],
+                    "nflx": data.data["NFLX"]["quote"]["latestPrice"]
+                };
                 this.setState({
                     tickers: tickers
                 })
             })
     }
 
-
-
     componentDidUpdate(prevProps, prevState, snapshot) {
+        this.calculateTotal();
 
+    }
+
+    calculateTotal() {
         const stocks = this.props.stocks ? [...this.props.stocks] : [];
+        var flag = false;
         stocks.map(stock => {
-            return stock ? stock.price = this.state.tickers[stock.ticker] : {}
+            if (stock) {
+                stock.price =  this.state.tickers[stock.ticker];
+                const total = stock.qty ? (stock.qty * stock.price).toFixed(2) : 0;
+                if (total != stock.total) {
+                    flag = true;
+                    stock.total = total;
+                }
+            }
+            return stock;
         });
-        console.log("tickers", this.state.tickers);
-        console.log(this.props.stocks);
-        console.log("new prices", stocks);
-        // console.log("in previous stocks", this.state.stocks);
 
+        if (flag) {
+            const reducer = (acc, current) =>  acc + parseFloat(current.total);
+            const total = stocks.reduce(reducer, 0);
+            this.setState({stocks : stocks, total : total});
+        }
+        console.log("in previous stocks", this.state.stocks);
+        console.log("total", this.state.total);
     }
 
 
@@ -49,13 +66,11 @@ class Stocks extends Component {
 
         return (
             <div className="stocksboard">
-                {/*{this.props.stocks}*/}
-                {/*{this.state.stocks.map((s, i) => <Item key={i} name={s.name} price={s.price}/>)}*/}
-                {this.props.stocks ? this.props.stocks.map((s, i) => <Item key={i} name={s.ticker} price={s.total} qty={s.qty}/> ) : ""}
+                In stocks: {this.state.total}
+                {this.state.stocks ? this.state.stocks.map((s, i) => <Item key={i} name={s.ticker} price={s.total} qty={s.qty}/> ) : ""}
 
             </div>
         );
     }
 }
-
 export default Stocks;

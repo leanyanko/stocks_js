@@ -92,7 +92,7 @@ class Buy extends Component {
         // console.log("state", this.state);
         return (
             <div className="buy">
-                {this.state.user.cash}
+                In cash: {this.state.user.cash}
 
                 <form onSubmit={(event) => {this.buy(event)}} ref={(form) => {this.buyForm = form}}>
                     <input style={{width: "100%"}}
