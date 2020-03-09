@@ -6,6 +6,7 @@ import {db, fire} from "../services/firebase";
 import Spinner from "./Spinner";
 import './Dashboard.css';
 import Buy from "./Buy";
+import Transactions from "./Transactions";
 
 
 class Dashboard extends Component {
@@ -101,7 +102,7 @@ class Dashboard extends Component {
                     {/*{this.state.user && this.state.user.id ?*/}
                         <Stocks stocks={(this.state.user) ? this.state.user.stocks : []} id={this.state.user? this.state.user.id : ""}/>
                         {/*: "" }*/}
-
+                        <Transactions transactions ={this.state.user ? this.state.user.transactions : []}/>
                 </div>
 
             </div>

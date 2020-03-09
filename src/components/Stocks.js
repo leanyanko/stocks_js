@@ -53,7 +53,7 @@ class Stocks extends Component {
 
         if (flag) {
             const reducer = (acc, current) =>  acc + parseFloat(current.total);
-            const total = stocks.reduce(reducer, 0);
+            const total = stocks.reduce(reducer, 0).toFixed(2);
             this.setState({stocks : stocks, total : total});
         }
         console.log("in previous stocks", this.state.stocks);

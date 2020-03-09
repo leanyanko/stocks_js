@@ -16,8 +16,10 @@ class Buy extends Component {
         this.buy = this.buy.bind(this);
         this.getPrice = this.getPrice.bind(this);
         this.updateUser = this.updateUser.bind(this);
-        console.log("constructor buy props", this.props.user);
+        // console.log("constructor buy props", this.props.user);
+        this.createNewUser = this.createNewUser.bind(this);
     }
+
 
 
 
@@ -40,43 +42,45 @@ class Buy extends Component {
     }
 
 
-    updateUser(user, ticker, qty, total) {
+    createNewUser(user, ticker, qty, total) {
         user.cash -= total;
         const today = new Date().toISOString();
         const transaction = "buy";
         if (!user.stocks) user.stocks = [];
         const tmp = user.stocks.filter(stock => stock.ticker === ticker)[0];
-
+        total = parseFloat(total);
         if (tmp) {
             // tmp.qty = parseInt(tmp.qty) + qty;
             tmp.qty += qty;
             tmp.total += total;
-        }
-         else
-             user.stocks.push({ticker, qty, total});
+        } else
+            user.stocks.push({ticker, qty, total});
 
-        if (!user.transactions) user.transactions= [];
+        if (!user.transactions) user.transactions = [];
         user.transactions.push({ticker, qty, total, today, transaction});
+        return user;
+    }
 
+    updateUser(user, ticker, qty, total) {
+        const newUser = this.createNewUser(user, ticker, qty, total);
         this.setState({
-            user:user
+            user: newUser
         });
         if (!user.id) user.id = this.state.id;
         db.ref('users/' + this.state.id).set({
-            cash: user.cash,
-            email: user.email,
-            stocks: user.stocks,
-            transactions: user.transactions
+            cash: newUser.cash.toFixed(2),
+            email: newUser.email,
+            stocks: newUser.stocks,
+            transactions: newUser.transactions
         });
-        this.props.updates(user);
+        this.props.updates(newUser);
     }
 
     buy(event) {
         event.preventDefault();
-        // const that = this;
         const ticker = this.ticker.value;
         const qty = parseInt(this.qty.value);
-        const total = this.state.total;
+        const total = parseFloat(this.state.total);
         const user = {...this.state.user};
         if (user.cash >= total) {
             this.updateUser(user, ticker, qty, total);
@@ -85,7 +89,10 @@ class Buy extends Component {
 
     getPrice(ticker) {
         stockService.getSingle(ticker)
-            .then((promise) => this.setState({price: promise.data[ticker.toUpperCase()]["quote"]["latestPrice"].toFixed(2)}));
+            .then((promise) =>
+                this.setState({
+                    price: promise.data[ticker.toUpperCase()]["quote"]["latestPrice"].toFixed(2)
+                }));
     }
 
     render() {
