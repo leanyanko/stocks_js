@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Redirect } from 'react-router-dom';
 import './Login.css';
-import {fire} from '../services/firebase';
+import {db, fire} from '../services/firebase';
 import  '@firebase/auth'
 
 class Login extends Component {
@@ -13,7 +13,8 @@ class Login extends Component {
             authenticated: false,
             hint: ""
         }
-        this.authWithEmailc=this.authWithEmail.bind(this);
+        this.authWithEmail=this.authWithEmail.bind(this);
+        this.addNewUser = this.addNewUser.bind(this);
     }
 
     authWithEmail(event) {
@@ -28,7 +29,9 @@ class Login extends Component {
             .catch(function(error) {
             if (error.code === "auth/user-not-found") {
                 fire.auth().createUserWithEmailAndPassword(email, password)
-                    .then((user) => that.setState({redirect: true, authenticated: true}))
+                    .then((user) => {
+                        that.setState({redirect: true, authenticated: true, id: that.addNewUser(email)})
+                    })
                     .catch((err) => {
                         that.setState({hint: err.message});
                 });
@@ -38,7 +41,16 @@ class Login extends Component {
         this.loginform.reset();
     }
 
+    addNewUser(email) {
+        const refUser = db.ref().child('users');
+        const newUserRef = refUser.push();
+        const key = newUserRef.key;
+        newUserRef.set({email: email, cash: 5000, id: key});
+        return key;
+    }
+
     render() {
+        // console.log(this.state);
         if (this.state.redirect === true) {
             return <Redirect to='/' />
         }

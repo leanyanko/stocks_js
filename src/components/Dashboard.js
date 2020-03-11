@@ -25,7 +25,6 @@ class Dashboard extends Component {
                 this.setState({
                     authenticated: true,
                     loading: false,
-                    user: user
                 });
                 this.getRespectiveUser(user);
             } else {
@@ -40,20 +39,17 @@ class Dashboard extends Component {
 
     getRespectiveUser(user) {
         const oldUser = {...user};
+        var dbUser = {};
         const refUser = db.ref().child('users');
         refUser.on('value', snap => {
             const users = snap.val();
-            var dbUser = {};
-            var index = 0;
-            for (index; index < users.length; index++) {
-                if (users[index].email === oldUser.email) {
-                    dbUser = users[index];
+            for (let [key, value] of Object.entries(users)) {
+                if (value.email === oldUser.email) {
+                    // console.log('found', value);
+                    dbUser = value;
                     break;
                 }
             }
-            if (dbUser.stocks) oldUser.stocks = dbUser.stocks;
-            if (dbUser.transactions) oldUser.transactions = dbUser.transactions;
-            dbUser.id = index;
             this.setState({user: dbUser});
         });
     }
@@ -68,10 +64,13 @@ class Dashboard extends Component {
             user.cash = updated.cash;
             user.stocks = updated.stocks;
             user.transactions = updated.transactions;
+            user.id = updated.id;
+            this.setState({user: updated});
         }
     }
 
     render() {
+        console.log("dashbord", this.state);
         if (this.state.loading === true) {
             return (
                 <div style={{ textAlign: "center", position: "absolute", top: "25%", left: "50%" }}>

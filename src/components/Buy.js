@@ -8,15 +8,13 @@ class Buy extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // user: this.props.user
-            user: {},
+            flag: false,
             cost: 0,
             dict: ["aapl", "msft", "nflx"]
         };
         this.buy = this.buy.bind(this);
         this.getPrice = this.getPrice.bind(this);
         this.updateUser = this.updateUser.bind(this);
-        // console.log("constructor buy props", this.props.user);
         this.createNewUser = this.createNewUser.bind(this);
     }
 
@@ -28,14 +26,16 @@ class Buy extends Component {
         refUser.on('value', snap => {
             const users = snap.val();
             var user = {};
-            var index = 0;
-            for (index; index < users.length; index++) {
-                if (users[index].email === this.props.user.email) {
-                    user = users[index];
+            // console.log("meanwhile in buy", users);
+            // console.log("meanwhile in state", this.state.user);
+            for (let [key, value] of Object.entries(users)) {
+                if (value && this.props.user && value.email === this.props.user.email) {
+                    console.log('found', value);
+                    user = value;
                     break;
                 }
             }
-            this.setState({user: user, id: index});
+            this.setState({user: user, id: user.id});
         });
     }
 
@@ -73,6 +73,29 @@ class Buy extends Component {
         this.props.updates(newUser);
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("users", this.props.user);
+        // if (this.props.user && !this.state.user || this.props.user && this.state.user === null) {
+        if (this.props.user && !this.state.flag) {
+            // this.setState({user: this.props.user});
+            const refUser = db.ref().child('users');
+            refUser.on('value', snap => {
+                const users = snap.val();
+                var user = {};
+                console.log("meanwhile in buy", users);
+                console.log("meanwhile in state", this.state.user);
+                for (let [key, value] of Object.entries(users)) {
+                    if (value && this.props.user && value.email === this.props.user.email) {
+                        console.log('found', value);
+                        user = value;
+                        break;
+                    }
+                }
+                this.setState({user: user, id: user.id, flag: true});
+            });
+        }
+    }
+
     buy(event) {
         event.preventDefault();
         const ticker = this.ticker.value;
@@ -93,9 +116,10 @@ class Buy extends Component {
     }
 
     render() {
+        console.log("buy state", this.state)
         return (
             <div className="buy">
-                In cash: {this.state.user.cash}
+                {this.state.user ? <span>In cash: {this.state.user.cash}</span> : ""}
 
                 <form onSubmit={(event) => {this.buy(event)}} ref={(form) => {this.buyForm = form}}>
                     <input style={{width: "100%"}}
