@@ -46,6 +46,7 @@ class Dashboard extends Component {
             for (let [key, value] of Object.entries(users)) {
                 if (value.email === oldUser.email) {
                     dbUser = value;
+                    dbUser.id = key;
                     break;
                 }
             }

@@ -20,6 +20,7 @@ class Buy extends Component {
 
     createNewUser(user, ticker, qty, total) {
         user.cash -= total;
+        // user.cash = user.cash.toFixed(2);
         const today = new Date().toISOString();
         const transaction = "buy";
         if (!user.stocks) user.stocks = [];
@@ -52,23 +53,8 @@ class Buy extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.user && !this.state.flag) {
-            const refUser = db.ref().child('users');
-            refUser.on('value', snap => {
-                const users = snap.val();
-                var user = {};
-                var _key = "";
-                for (let [key, value] of Object.entries(users)) {
-                    if (value && this.props.user && value.email === this.props.user.email) {
-                        user = value;
-                        _key = key;
-                        break;
-                    }
-                }
-                console.log("setting", user);
-                this.setState({user: user, id: _key, flag: true});
-            });
-        }
+        if (this.props.user && this.props != prevProps)
+            this.setState({user: this.props.user, id: this.props.user.id});
     }
 
     buy(event) {
@@ -95,7 +81,7 @@ class Buy extends Component {
         console.log("buy state", this.state)
         return (
             <div className="buy">
-                {this.state.user ? <span>In cash: {this.state.user.cash}</span> : ""}
+                {this.state.user ? <span>In cash: {parseFloat(this.state.user.cash).toFixed(2)}</span> : ""}
 
                 <form onSubmit={(event) => {this.buy(event)}} ref={(form) => {this.buyForm = form}}>
                     <input style={{width: "100%"}}
