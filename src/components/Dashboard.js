@@ -70,7 +70,6 @@ class Dashboard extends Component {
     }
 
     render() {
-        console.log("dashbord", this.state);
         if (this.state.loading === true) {
             return (
                 <div style={{ textAlign: "center", position: "absolute", top: "25%", left: "50%" }}>

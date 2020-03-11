@@ -20,7 +20,6 @@ class Buy extends Component {
 
     createNewUser(user, ticker, qty, total) {
         user.cash -= total;
-        // user.cash = user.cash.toFixed(2);
         const today = new Date().toISOString();
         const transaction = "buy";
         if (!user.stocks) user.stocks = [];
@@ -78,7 +77,6 @@ class Buy extends Component {
     }
 
     render() {
-        console.log("buy state", this.state)
         return (
             <div className="buy">
                 {this.state.user ? <span>In cash: {parseFloat(this.state.user.cash).toFixed(2)}</span> : ""}
