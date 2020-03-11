@@ -10,35 +10,13 @@ class Buy extends Component {
         this.state = {
             flag: false,
             cost: 0,
-            dict: ["aapl", "msft", "nflx"]
+            dict: ["aapl", "msft", "nflx", "stwd"]
         };
         this.buy = this.buy.bind(this);
         this.getPrice = this.getPrice.bind(this);
         this.updateUser = this.updateUser.bind(this);
         this.createNewUser = this.createNewUser.bind(this);
     }
-
-
-
-
-    componentDidMount() {
-        const refUser = db.ref().child('users');
-        refUser.on('value', snap => {
-            const users = snap.val();
-            var user = {};
-            // console.log("meanwhile in buy", users);
-            // console.log("meanwhile in state", this.state.user);
-            for (let [key, value] of Object.entries(users)) {
-                if (value && this.props.user && value.email === this.props.user.email) {
-                    console.log('found', value);
-                    user = value;
-                    break;
-                }
-            }
-            this.setState({user: user, id: user.id});
-        });
-    }
-
 
     createNewUser(user, ticker, qty, total) {
         user.cash -= total;
@@ -74,24 +52,21 @@ class Buy extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log("users", this.props.user);
-        // if (this.props.user && !this.state.user || this.props.user && this.state.user === null) {
         if (this.props.user && !this.state.flag) {
-            // this.setState({user: this.props.user});
             const refUser = db.ref().child('users');
             refUser.on('value', snap => {
                 const users = snap.val();
                 var user = {};
-                console.log("meanwhile in buy", users);
-                console.log("meanwhile in state", this.state.user);
+                var _key = "";
                 for (let [key, value] of Object.entries(users)) {
                     if (value && this.props.user && value.email === this.props.user.email) {
-                        console.log('found', value);
                         user = value;
+                        _key = key;
                         break;
                     }
                 }
-                this.setState({user: user, id: user.id, flag: true});
+                console.log("setting", user);
+                this.setState({user: user, id: _key, flag: true});
             });
         }
     }
@@ -102,6 +77,7 @@ class Buy extends Component {
         const qty = parseInt(this.qty.value);
         const total = parseFloat(this.state.total);
         const user = {...this.state.user};
+        console.log("buying", this.state.id);
         if (user.cash >= total) {
             this.updateUser(user, ticker, qty, total);
         }

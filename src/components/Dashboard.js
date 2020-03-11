@@ -45,7 +45,6 @@ class Dashboard extends Component {
             const users = snap.val();
             for (let [key, value] of Object.entries(users)) {
                 if (value.email === oldUser.email) {
-                    // console.log('found', value);
                     dbUser = value;
                     break;
                 }
